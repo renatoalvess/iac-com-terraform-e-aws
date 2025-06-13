@@ -11,8 +11,9 @@ amazon-linux-extras install -y ansible2
 # Instala o Git para clonar o playbook
 yum install -y git wget
 
-# Clona o repositório que contém o playbook
-git clone https://github.com/avanti-dvp/iac-com-terraform-e-aws.git /home/ec2-user/ansible-config
+# Baixa o playbook
+mkdir -p /home/ec2-user/ansible-config
+wget -c https://gitlab.com/avanti-dvp/iac-com-terraform-e-aws/-/raw/main/playbook.yaml?ref_type=heads&inline=false -O /home/ec2-user/ansible-config/playbook.yaml
 
 # Executa o playbook Ansible localmente
-ansible-playbook /home/ec2-user/ansible-config/playbook.yaml
+ansible-playbook /home/ec2-user/ansible-config/playbook.yaml > /var/log/ansible-playbook.log 2>&1
