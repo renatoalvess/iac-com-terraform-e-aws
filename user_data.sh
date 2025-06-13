@@ -13,7 +13,8 @@ yum install -y git wget
 
 # Baixa o playbook
 mkdir -p /home/ec2-user/ansible-config
-wget -c https://gitlab.com/avanti-dvp/iac-com-terraform-e-aws/-/raw/main/playbook.yaml?ref_type=heads&inline=false -O /home/ec2-user/ansible-config/playbook.yaml
+wget -c https://gitlab.com/avanti-dvp/iac-com-terraform-e-aws/-/raw/main/playbook.yaml -O /home/ec2-user/ansible-config/playbook.yaml
+chown ec2-user:ec2-user /home/ec2-user/ansible-config/playbook.yaml
 
 # Executa o playbook Ansible localmente
 ansible-playbook /home/ec2-user/ansible-config/playbook.yaml > /var/log/ansible-playbook.log 2>&1

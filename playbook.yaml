@@ -38,5 +38,13 @@
         dest: "/usr/share/nginx/html/"
         remote_src: yes # src e dest estão na mesma máquina
         owner: root
-        group: root
-        mode: '0644'
+        group: nginx
+        mode: '0755'
+      notify: 
+      - restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

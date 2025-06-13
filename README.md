@@ -19,8 +19,9 @@ Este documento também está disponível em [formato PDF](docs/README.pdf) e [fo
 - Instalação do AWS CLI
     - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 - Criando usuário na AWS
-    - [**Acesse esse documento**](docs/Criação%20de%20usuário%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf) 
-
+    - [**Acesse esse documento**](docs/Criação%20de%20usuário%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf)
+- Realizar login no AWS CLI
+    - `aws configure`
 
 ## Passo a passo 
 
@@ -118,7 +119,7 @@ Vamos começar a diversão! 🥳
             from_port   = 22
             to_port     = 22
             protocol    = "tcp"
-            cidr_blocks = var.meu_ip_publico
+            cidr_blocks = [var.meu_ip_publico]
         }
 
         tags = {
@@ -235,7 +236,16 @@ Vamos começar a diversão! 🥳
     > O comando `terraform plan` cria um plano de execução que mostra as alterações que serão feitas na infraestrutura na nuvem.
     > O comando `terraform apply` aplica as configurações definidas nos arquivos .tf e cria a infraestrutura na nuvem.
 
-12. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo para ver o site está no ar.
+12. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.
+
+> [!WARNING]
+> A maioria dos navegadores modernos força o redirecionamento da página para HTTPS
+> Como não subimos o site em HTTPS, a conexão não irá acontecer
+> Portanto, para ver o site funcionando, você precisa adicionar o http:// no começo da URL antes do IP na barra de endereço do seu navegador
+
+E ele deverá aparecer dessa forma:
+
+![image](docs/site.png)
 
 13. Para destruir a infraestrutura na nuvem, execute o comando abaixo:
     ```bash
