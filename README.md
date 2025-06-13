@@ -183,7 +183,7 @@ Vamos começar a diversão! 🥳
         ]
 
         tags = {
-            Name = "WebServer-SRE"
+            Name = "WebServer-DVP"
         }
     }
     ```
@@ -245,7 +245,7 @@ Vamos começar a diversão! 🥳
 
 E ele deverá aparecer dessa forma:
 
-![image](docs/site.png)
+![Site no Ar](docs/images/site.png)
 
 13. Para destruir a infraestrutura na nuvem, execute o comando abaixo:
     ```bash
@@ -254,8 +254,12 @@ E ele deverá aparecer dessa forma:
 
     > [!NOTE]
     > O comando `terraform destroy` destrói a infraestrutura na nuvem que foi criada pelo Terraform.
-    > **RECOMENDADO**: Sempre que você criar uma infraestrutura na nuvem, certifique-se de destruí-la quando não estiver mais usando.
+    > **RECOMENDADO:** Sempre que você criar uma infraestrutura na nuvem, certifique-se de destruí-la quando não estiver mais usando.
 
 ## Saiba mais
 
 - [Documentação do Terraform](https://developer.hashicorp.com/terraform)
+- [Documentação do Provider AWS do Terraform](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Lista de Providers do Terraform](https://registry.terraform.io/browse/providers)
+- [Documentação da AWS](https://docs.aws.amazon.com/pt_br/)
+

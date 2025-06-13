@@ -367,7 +367,7 @@ code {
   </script>
 <h1 id="iac-com-terraform-e-aws">IAC com Terraform e AWS</h1>
 <p>Neste repositório, vamos aprender a usar o Terraform e a AWS para criar a nossa primeira infra na nuvem.</p>
-<p>Este documento também está disponível em <a href="docs/README.pdf">formato PDF</a> e <a href="docs/README.html">formato HTML</a> para que você possa visualizá-lo offline.</p>
+<p>Este documento também está disponível em <a href="README.pdf">formato PDF</a> e <a href="README.html">formato HTML</a> para que você possa visualizá-lo offline.</p>
 <h2 id="tabela-de-conte%C3%BAdos">Tabela de conteúdos</h2>
 <ul>
 <li><a href="#pr%C3%A9-requisitos">Pré-requisitos</a></li>
@@ -380,7 +380,7 @@ code {
 <li>Instalação do Terraform
 <ul>
 <li>https://developer.hashicorp.com/terraform/downloads?product_intent=terraform</li>
-<li><strong>Usa Windows?</strong> acesse esse <a href="docs/Como%20Instalar%20o%20Terraform%20no%20Windows.pdf">documento</a></li>
+<li><strong>Usa Windows?</strong> acesse esse <a href="Como%20Instalar%20o%20Terraform%20no%20Windows.pdf">documento</a></li>
 </ul>
 </li>
 <li>Instalação do AWS CLI
@@ -390,7 +390,12 @@ code {
 </li>
 <li>Criando usuário na AWS
 <ul>
-<li><a href="docs/Cria%C3%A7%C3%A3o%20de%20usu%C3%A1rio%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf"><strong>Acesse esse documento</strong></a></li>
+<li><a href="Cria%C3%A7%C3%A3o%20de%20usu%C3%A1rio%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf"><strong>Acesse esse documento</strong></a></li>
+</ul>
+</li>
+<li>Realizar login no AWS CLI
+<ul>
+<li><code>aws configure</code></li>
 </ul>
 </li>
 </ul>
@@ -493,7 +498,7 @@ resource &quot;aws_security_group&quot; &quot;ssh_sg&quot; {
         from_port   = 22
         to_port     = 22
         protocol    = &quot;tcp&quot;
-        cidr_blocks = var.meu_ip_publico
+        cidr_blocks = [var.meu_ip_publico]
     }
 
     tags = {
@@ -618,8 +623,18 @@ O comando <code>terraform apply</code> aplica as configurações definidas nos a
 </blockquote>
 </li>
 <li>
-<p>Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo para ver o site está no ar.</p>
+<p>Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.</p>
 </li>
+</ol>
+<blockquote>
+<p>[!WARNING]
+A maioria dos navegadores modernos força o redirecionamento da página para HTTPS
+Como não subimos o site em HTTPS, a conexão não irá acontecer
+Portanto, para ver o site funcionando, você precisa adicionar o http:// no começo da URL antes do IP na barra de endereço do seu navegador</p>
+</blockquote>
+<p>E ele deverá aparecer dessa forma:</p>
+<p><img src="images/site.png" alt="Site no Ar"></p>
+<ol start="13">
 <li>
 <p>Para destruir a infraestrutura na nuvem, execute o comando abaixo:</p>
 <pre class="hljs"><code><div>terraform destroy
@@ -627,7 +642,7 @@ O comando <code>terraform apply</code> aplica as configurações definidas nos a
 <blockquote>
 <p>[!NOTE]
 O comando <code>terraform destroy</code> destrói a infraestrutura na nuvem que foi criada pelo Terraform.
-<strong>RECOMENDADO</strong>: Sempre que você criar uma infraestrutura na nuvem, certifique-se de destruí-la quando não estiver mais usando.</p>
+<strong>RECOMENDADO:</strong> Sempre que você criar uma infraestrutura na nuvem, certifique-se de destruí-la quando não estiver mais usando.</p>
 </blockquote>
 </li>
 </ol>
