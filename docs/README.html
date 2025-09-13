@@ -367,7 +367,7 @@ code {
   </script>
 <h1 id="iac-com-terraform-e-aws">IAC com Terraform e AWS</h1>
 <p>Neste repositório, vamos aprender a usar o Terraform e a AWS para criar a nossa primeira infra na nuvem.</p>
-<p>Este documento também está disponível em <a href="README.pdf">formato PDF</a> e <a href="README.html">formato HTML</a> para que você possa visualizá-lo offline.</p>
+<p>Este documento também está disponível em <a href="docs/README.pdf">formato PDF</a> e <a href="docs/README.html">formato HTML</a> para que você possa visualizá-lo offline.</p>
 <h2 id="tabela-de-conte%C3%BAdos">Tabela de conteúdos</h2>
 <ul>
 <li><a href="#pr%C3%A9-requisitos">Pré-requisitos</a></li>
@@ -380,7 +380,7 @@ code {
 <li>Instalação do Terraform
 <ul>
 <li>https://developer.hashicorp.com/terraform/downloads?product_intent=terraform</li>
-<li><strong>Usa Windows?</strong> acesse esse <a href="Como%20Instalar%20o%20Terraform%20no%20Windows.pdf">documento</a></li>
+<li><strong>Usa Windows?</strong> acesse esse <a href="docs/Como%20Instalar%20o%20Terraform%20no%20Windows.pdf">documento</a></li>
 </ul>
 </li>
 <li>Instalação do AWS CLI
@@ -390,7 +390,7 @@ code {
 </li>
 <li>Criando usuário na AWS
 <ul>
-<li><a href="Cria%C3%A7%C3%A3o%20de%20usu%C3%A1rio%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf"><strong>Acesse esse documento</strong></a></li>
+<li><a href="docs/Cria%C3%A7%C3%A3o%20de%20usu%C3%A1rio%20na%20AWS%20e%20chave%20de%20acesso%20para%20vincular%20ao%20AWS%20CLI%20na%20sua%20maquina.pdf"><strong>Acesse esse documento</strong></a></li>
 </ul>
 </li>
 <li>Realizar login no AWS CLI
@@ -551,7 +551,6 @@ O arquivo <code>data.tf</code> é o arquivo que define um datasource responsáve
 resource &quot;aws_instance&quot; &quot;web_server&quot; {
     ami           = data.aws_ami.amazon_linux.id
     instance_type = &quot;t2.micro&quot;
-    user_data     = base64encode(file(&quot;user_data.sh&quot;))
 
     # Define o key pair para a instância
     key_name      = aws_key_pair.ec2_key_pair.key_name
@@ -564,7 +563,7 @@ resource &quot;aws_instance&quot; &quot;web_server&quot; {
     ]
 
     tags = {
-        Name = &quot;WebServer-SRE&quot;
+        Name = &quot;WebServer-DVP&quot;
     }
 }
 </div></code></pre>
@@ -607,6 +606,69 @@ O arquivo <code>variables.tf</code> é o arquivo que define as variáveis que se
 </blockquote>
 </li>
 <li>
+<p>Agora é hora de criar o playbook do Ansible para irá provisionar a página</p>
+</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-meta">---</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Configure</span> <span class="hljs-string">Web</span> <span class="hljs-string">Server</span> <span class="hljs-string">Locally</span>
+  <span class="hljs-attr">hosts:</span> <span class="hljs-string">localhost</span>    <span class="hljs-comment"># Alvo é a própria máquina</span>
+  <span class="hljs-attr">connection:</span> <span class="hljs-string">local</span>   <span class="hljs-comment"># Usa a conexão local, não SSH</span>
+  <span class="hljs-attr">become:</span> <span class="hljs-literal">yes</span>         <span class="hljs-comment"># Necessário para instalar pacotes e gerenciar serviços</span>
+
+  <span class="hljs-attr">tasks:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Ensure</span> <span class="hljs-string">all</span> <span class="hljs-string">packages</span> <span class="hljs-string">are</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">date</span>
+      <span class="hljs-attr">yum:</span>
+        <span class="hljs-attr">name:</span> <span class="hljs-string">'*'</span>
+        <span class="hljs-attr">state:</span> <span class="hljs-string">latest</span>
+
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Install</span> <span class="hljs-string">Git</span>
+      <span class="hljs-attr">yum:</span>
+        <span class="hljs-attr">name:</span> <span class="hljs-string">git</span>
+        <span class="hljs-attr">state:</span> <span class="hljs-string">present</span>
+
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Install</span> <span class="hljs-string">Nginx</span> <span class="hljs-string">on</span> <span class="hljs-string">Amazon</span> <span class="hljs-string">Linux</span> <span class="hljs-number">2</span>
+      <span class="hljs-attr">command:</span> <span class="hljs-string">amazon-linux-extras</span> <span class="hljs-string">install</span> <span class="hljs-string">-y</span> <span class="hljs-string">nginx1</span>
+      <span class="hljs-attr">args:</span>
+        <span class="hljs-attr">creates:</span> <span class="hljs-string">/usr/sbin/nginx</span>
+
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Ensure</span> <span class="hljs-string">Nginx</span> <span class="hljs-string">service</span> <span class="hljs-string">is</span> <span class="hljs-string">started</span> <span class="hljs-string">and</span> <span class="hljs-string">enabled</span>
+      <span class="hljs-attr">service:</span>
+        <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+        <span class="hljs-attr">state:</span> <span class="hljs-string">started</span>
+        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">yes</span>
+
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Clone</span> <span class="hljs-string">website</span> <span class="hljs-string">repository</span>
+      <span class="hljs-attr">git:</span>
+        <span class="hljs-attr">repo:</span> <span class="hljs-string">'https://github.com/avanti-dvp/site-exemplo-aws.git'</span> <span class="hljs-comment"># Pode ser o mesmo repo ou outro</span>
+        <span class="hljs-attr">dest:</span> <span class="hljs-string">'/tmp/website'</span>
+        <span class="hljs-attr">clone:</span> <span class="hljs-literal">yes</span>
+
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">website</span> <span class="hljs-string">files</span> <span class="hljs-string">to</span> <span class="hljs-string">Nginx</span> <span class="hljs-string">document</span> <span class="hljs-string">root</span>
+      <span class="hljs-attr">copy:</span>
+        <span class="hljs-attr">src:</span> <span class="hljs-string">"/tmp/website/"</span>
+        <span class="hljs-attr">dest:</span> <span class="hljs-string">"/usr/share/nginx/html/"</span>
+        <span class="hljs-attr">remote_src:</span> <span class="hljs-literal">yes</span> <span class="hljs-comment"># src e dest estão na mesma máquina</span>
+        <span class="hljs-attr">owner:</span> <span class="hljs-string">root</span>
+        <span class="hljs-attr">group:</span> <span class="hljs-string">nginx</span>
+        <span class="hljs-attr">mode:</span> <span class="hljs-string">'0755'</span>
+      <span class="hljs-attr">notify:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">restart</span> <span class="hljs-string">nginx</span>
+
+  <span class="hljs-attr">handlers:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">restart</span> <span class="hljs-string">nginx</span>
+      <span class="hljs-attr">service:</span>
+        <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span>
+        <span class="hljs-attr">state:</span> <span class="hljs-string">restarted</span>
+</div></code></pre>
+<ol start="11">
+<li>Agora precisamos criar o inventário do Ansible para que ele possa acessar a instância EC2 que foi criada pelo Terraform.</li>
+</ol>
+<pre class="hljs"><code><div>touch inventory
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"[all]"</span> &gt;&gt; inventory
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2-instance-key.pem"</span> &gt;&gt; inventory
+</div></code></pre>
+<ol start="13">
+<li>
 <p>Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.</p>
 </li>
 <li>
@@ -623,6 +685,16 @@ O comando <code>terraform apply</code> aplica as configurações definidas nos a
 </blockquote>
 </li>
 <li>
+<p>Agora vamos rodar o Ansible para configurar a instância EC2:</p>
+<pre class="hljs"><code><div>ansible-playbook -i inventory playbook.yml
+</div></code></pre>
+<blockquote>
+<p>[!NOTE]
+O comando <code>ansible-playbook</code> executa o playbook definido no arquivo playbook.yml.
+O parâmetro <code>-i</code> especifica o arquivo de inventário que contém as informações de acesso à instância EC2.</p>
+</blockquote>
+</li>
+<li>
 <p>Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.</p>
 </li>
 </ol>
@@ -633,7 +705,7 @@ Como não subimos o site em HTTPS, a conexão não irá acontecer
 Portanto, para ver o site funcionando, você precisa adicionar o http:// no começo da URL antes do IP na barra de endereço do seu navegador</p>
 </blockquote>
 <p>E ele deverá aparecer dessa forma:</p>
-<p><img src="images/site.png" alt="Site no Ar"></p>
+<p><img src="docs/images/site.png" alt="Site no Ar"></p>
 <ol start="13">
 <li>
 <p>Para destruir a infraestrutura na nuvem, execute o comando abaixo:</p>
@@ -649,6 +721,9 @@ O comando <code>terraform destroy</code> destrói a infraestrutura na nuvem que 
 <h2 id="saiba-mais">Saiba mais</h2>
 <ul>
 <li><a href="https://developer.hashicorp.com/terraform">Documentação do Terraform</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">Documentação do Provider AWS do Terraform</a></li>
+<li><a href="https://registry.terraform.io/browse/providers">Lista de Providers do Terraform</a></li>
+<li><a href="https://docs.aws.amazon.com/pt_br/">Documentação da AWS</a></li>
 </ul>
 
 </body>
