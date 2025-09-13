@@ -372,7 +372,6 @@ code {
 <ul>
 <li><a href="#pr%C3%A9-requisitos">Pré-requisitos</a></li>
 <li><a href="#passo-a-passo">Passo a passo</a></li>
-<li><a href="#erros-conhecidos">Erros conhecidos</a></li>
 <li><a href="#saiba-mais">Saiba mais</a></li>
 </ul>
 <h2 id="pr%C3%A9-requisitos">Pré-requisitos</h2>
@@ -611,8 +610,7 @@ O arquivo <code>variables.tf</code> é o arquivo que define as variáveis que se
 </ol>
 <pre class="hljs"><code><div><span class="hljs-meta">---</span>
 <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Configure</span> <span class="hljs-string">Web</span> <span class="hljs-string">Server</span> <span class="hljs-string">Locally</span>
-  <span class="hljs-attr">hosts:</span> <span class="hljs-string">localhost</span>    <span class="hljs-comment"># Alvo é a própria máquina</span>
-  <span class="hljs-attr">connection:</span> <span class="hljs-string">local</span>   <span class="hljs-comment"># Usa a conexão local, não SSH</span>
+  <span class="hljs-attr">hosts:</span> <span class="hljs-string">all</span>
   <span class="hljs-attr">become:</span> <span class="hljs-literal">yes</span>         <span class="hljs-comment"># Necessário para instalar pacotes e gerenciar serviços</span>
 
   <span class="hljs-attr">tasks:</span>
@@ -667,7 +665,7 @@ O arquivo <code>variables.tf</code> é o arquivo que define as variáveis que se
 <span class="hljs-built_in">echo</span> <span class="hljs-string">"[all]"</span> &gt;&gt; inventory
 <span class="hljs-built_in">echo</span> <span class="hljs-string">"ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2-instance-key.pem"</span> &gt;&gt; inventory
 </div></code></pre>
-<ol start="13">
+<ol start="12">
 <li>
 <p>Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.</p>
 </li>

@@ -225,8 +225,7 @@ Vamos começar a diversão! 🥳
 ```yaml
 ---
 - name: Configure Web Server Locally
-  hosts: localhost    # Alvo é a própria máquina
-  connection: local   # Usa a conexão local, não SSH
+  hosts: all
   become: yes         # Necessário para instalar pacotes e gerenciar serviços
 
   tasks:
