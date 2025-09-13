@@ -8,7 +8,6 @@ Este documento também está disponível em [formato PDF](docs/README.pdf) e [fo
 
 - [Pré-requisitos](#pré-requisitos)
 - [Passo a passo](#passo-a-passo)
-- [Erros conhecidos](#erros-conhecidos)
 - [Saiba mais](#saiba-mais)
 
 ## Pré-requisitos
@@ -284,9 +283,9 @@ echo "[all]" >> inventory
 echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2-instance-key.pem" >> inventory
 ```
 
-13. Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.
+12. Boa! terminamos de criar todos os arquivos necessários para a criação da infraestrutura na nuvem.
 
-14. Agora vamos iniciar o fluxo de trabalho do Terraform para criar a infraestrutura na nuvem:
+13. Agora vamos iniciar o fluxo de trabalho do Terraform para criar a infraestrutura na nuvem:
     ```bash
     terraform init
     terraform plan
@@ -298,7 +297,7 @@ echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2
     > O comando `terraform plan` cria um plano de execução que mostra as alterações que serão feitas na infraestrutura na nuvem.
     > O comando `terraform apply` aplica as configurações definidas nos arquivos .tf e cria a infraestrutura na nuvem.
 
-15. Agora vamos rodar o Ansible para configurar a instância EC2:
+14. Agora vamos rodar o Ansible para configurar a instância EC2:
     ```bash
     ansible-playbook -i inventory playbook.yml
     ```
@@ -307,7 +306,7 @@ echo "ip_da_instancia_ec2 ansible_user=ec2-user ansible_ssh_private_key_file=ec2
     > O comando `ansible-playbook` executa o playbook definido no arquivo playbook.yml.
     > O parâmetro `-i` especifica o arquivo de inventário que contém as informações de acesso à instância EC2.
 
-16. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.
+15. Se tudo rodar com sucesso, você verá o IP público da instância EC2 e a URL do site provisionado, basta acessá-lo através dessa URL no seu navegador para ver o site está no ar.
 
 > [!WARNING]
 > A maioria dos navegadores modernos força o redirecionamento da página para HTTPS
